@@ -1,0 +1,32 @@
+{
+  "collections": [
+    {
+      "name": "users",
+      "description": "User profiles",
+      "documents": [
+        {
+          "id": "userId",
+          "fields": [
+            { "name": "email", "type": "string" },
+            { "name": "created_at", "type": "timestamp" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tailor_data",
+      "description": "Stores the tailor's atelier data",
+      "documents": [
+        {
+          "id": "userId",
+          "fields": [
+            { "name": "settings", "type": "map" },
+            { "name": "clients", "type": "array", "description": "Array of client objects" },
+            { "name": "commandes", "type": "array", "description": "Array of commande objects" },
+            { "name": "mesures", "type": "array", "description": "Array of mesures objects" }
+          ]
+        }
+      ]
+    }
+  ]
+}

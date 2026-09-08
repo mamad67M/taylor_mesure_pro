@@ -1,0 +1,6 @@
+{
+  "name": "MesurePro",
+  "description": "Application mobile de gestion pour tailleurs africains — clients, commandes indépendantes, tissus et mesures de couture",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
