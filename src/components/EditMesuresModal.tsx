@@ -119,7 +119,7 @@ export const EditMesuresModal: React.FC<EditMesuresModalProps> = ({
                     type="number"
                     inputMode="numeric"
                     value={form[f.key]}
-                    placeholder="—"
+                    placeholder="0"
                     onChange={e => {
                       const v = e.target.value;
                       setForm(prev => ({ ...prev, [f.key]: v }));
