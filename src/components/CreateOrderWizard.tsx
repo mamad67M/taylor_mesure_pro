@@ -683,15 +683,15 @@ export const CreateOrderWizard: React.FC<CreateOrderWizardProps> = ({
 
                   <div className="bg-white p-4 rounded-2xl border border-[#0D1B2A]/10 space-y-3">
                     {[
-                      { key: 'poitrine', label: 'Poitrine', placeholder: '102' },
-                      { key: 'taille', label: 'Taille', placeholder: '88' },
-                      { key: 'manche', label: 'Manche', placeholder: '64' },
-                      { key: 'epaules', label: 'Épaules', placeholder: '46' },
-                      { key: 'fesses', label: 'Fesses / Bassin', placeholder: '98' },
-                      { key: 'cuisses', label: 'Cuisses', placeholder: '58' },
-                      { key: 'longueur_chemise', label: 'Longueur chemise', placeholder: '82' },
-                      { key: 'longueur_jupe', label: 'Longueur jupe', placeholder: '95' },
-                      { key: 'longueur_robe', label: 'Longueur robe', placeholder: '135' },
+                      { key: 'poitrine', label: 'Poitrine', placeholder: '0' },
+                      { key: 'taille', label: 'Taille', placeholder: '0' },
+                      { key: 'manche', label: 'Manche', placeholder: '0' },
+                      { key: 'epaules', label: 'Épaules', placeholder: '0' },
+                      { key: 'fesses', label: 'Fesses / Bassin', placeholder: '0' },
+                      { key: 'cuisses', label: 'Cuisses', placeholder: '0' },
+                      { key: 'longueur_chemise', label: 'Longueur chemise', placeholder: '0' },
+                      { key: 'longueur_jupe', label: 'Longueur jupe', placeholder: '0' },
+                      { key: 'longueur_robe', label: 'Longueur robe', placeholder: '0' },
                     ].map(f => {
                       const fieldKey = f.key as keyof typeof mesures;
                       const val = mesures[fieldKey];
