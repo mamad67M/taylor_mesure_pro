@@ -72,7 +72,7 @@ export const DBService = {
       } else {
         cachedSettings = INITIAL_SETTINGS;
         // Option to create default settings
-        setDoc(docSnap.ref, { ...INITIAL_SETTINGS, user_id: userId }).catch(handleFirestoreError);
+        setDoc(doc(db, 'settings', userId), { ...INITIAL_SETTINGS, user_id: userId }).catch(handleFirestoreError);
       }
       notifyChange();
     }, handleFirestoreError);
@@ -110,6 +110,9 @@ export const DBService = {
       updated_at: now,
     };
 
+    cachedClients = [...cachedClients, newClient];
+    notifyChange();
+
     setDoc(doc(db, 'clients', newId), newClient).catch(handleFirestoreError);
     return newClient;
   },
@@ -145,7 +148,7 @@ export const DBService = {
   },
 
   addCommandeWithMesures(
-    commandeData: Omit<Commande, 'id' | 'created_at' | 'updated_at' | 'reste_a_payer'>,
+    commandeData: Omit<Commande, 'id' | 'created_at' | 'updated_at' | 'reste_a_payer' | 'reference'>,
     mesuresData: Partial<Mesures>
   ): { commande: Commande; mesures: Mesures } {
     const userId = auth.currentUser?.uid;
@@ -153,6 +156,7 @@ export const DBService = {
 
     const now = new Date().toISOString();
     const newCommandeId = 'cmd-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const reference = 'CMD-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
     
     const prix = Number(commandeData.prix_global) || 0;
     const avance = Number(commandeData.avance) || 0;
@@ -161,6 +165,7 @@ export const DBService = {
     const newCommande: Commande = {
       ...commandeData,
       id: newCommandeId,
+      reference,
       user_id: userId,
       prix_global: prix,
       avance: avance,
@@ -192,6 +197,10 @@ export const DBService = {
     batch.set(doc(db, 'commandes', newCommandeId), newCommande);
     batch.set(doc(db, 'mesures', newMesuresId), newMesures);
     batch.commit().catch(handleFirestoreError);
+    
+    cachedCommandes = [...cachedCommandes, newCommande];
+    cachedMesures = [...cachedMesures, newMesures];
+    notifyChange();
 
     return { commande: newCommande, mesures: newMesures };
   },
