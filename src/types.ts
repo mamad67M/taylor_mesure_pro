@@ -2,6 +2,7 @@ export type StatutCommande = 'en_cours' | 'pret' | 'solde';
 
 export interface Client {
   id: string;
+  user_id?: string;
   nom: string; // max 20 chars
   prenom: string; // max 20 chars
   telephone: string;
@@ -11,6 +12,7 @@ export interface Client {
 
 export interface Mesures {
   id: string;
+  user_id?: string;
   commande_id: string;
   poitrine: number | null;
   taille: number | null;
@@ -28,6 +30,7 @@ export interface Mesures {
 
 export interface Commande {
   id: string;
+  user_id?: string;
   client_id: string;
   reference: string; // ex: CMD-001
   nom_tissu?: string;
@@ -56,6 +59,7 @@ export type CommandeFilter = 'toutes' | 'en_cours' | 'pret' | 'solde';
 export type CommandeSort = 'livraison' | 'recent' | 'statut';
 
 export interface AtelierSettings {
+  user_id?: string;
   nom_atelier: string;
   nom_tailleur: string;
   telephone_atelier: string;
