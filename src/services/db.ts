@@ -127,11 +127,16 @@ export const DBService = {
       updated_at: new Date().toISOString(),
     };
 
+    cachedClients = cachedClients.map(c => c.id === id ? updated : c);
+    notifyChange();
+
     setDoc(doc(db, 'clients', id), updated).catch(handleFirestoreError);
     return updated;
   },
 
   deleteClient(id: string): void {
+    cachedClients = cachedClients.filter(c => c.id !== id);
+    notifyChange();
     deleteDoc(doc(db, 'clients', id)).catch(handleFirestoreError);
     // Note: To truly delete, we should also delete related commandes and mesures.
     // For simplicity, we just delete the client and the UI filters gracefully, 
@@ -232,6 +237,9 @@ export const DBService = {
       updated_at: new Date().toISOString(),
     };
 
+    cachedCommandes = cachedCommandes.map(c => c.id === id ? updated : c);
+    notifyChange();
+
     setDoc(doc(db, 'commandes', id), updated).catch(handleFirestoreError);
     return updated;
   },
@@ -241,8 +249,14 @@ export const DBService = {
   },
 
   deleteCommande(id: string): void {
-    deleteDoc(doc(db, 'commandes', id)).catch(handleFirestoreError);
+    cachedCommandes = cachedCommandes.filter(c => c.id !== id);
     const relatedMesures = cachedMesures.find(m => m.commande_id === id);
+    if (relatedMesures) {
+      cachedMesures = cachedMesures.filter(m => m.id !== relatedMesures.id);
+    }
+    notifyChange();
+
+    deleteDoc(doc(db, 'commandes', id)).catch(handleFirestoreError);
     if (relatedMesures) {
       deleteDoc(doc(db, 'mesures', relatedMesures.id)).catch(handleFirestoreError);
     }
@@ -274,6 +288,9 @@ export const DBService = {
       ...updates,
       updated_at: new Date().toISOString(),
     };
+
+    cachedMesures = cachedMesures.map(m => m.id === id ? updated : m);
+    notifyChange();
 
     setDoc(doc(db, 'mesures', id), updated).catch(handleFirestoreError);
     return updated;
