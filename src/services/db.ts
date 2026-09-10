@@ -32,7 +32,11 @@ let unsubSettings: (() => void) | null = null;
 // Error handler based on guidelines
 function handleFirestoreError(error: unknown) {
   console.error("Firestore DBService Error:", error);
-  // Just throw it so the UI can catch it if needed
+  if (error instanceof Error) {
+    alert("Erreur de sauvegarde avec Firebase: " + error.message);
+  } else {
+    alert("Erreur de sauvegarde avec Firebase.");
+  }
   throw error;
 }
 
