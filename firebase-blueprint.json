@@ -1,32 +1,98 @@
 {
-  "collections": [
-    {
-      "name": "users",
-      "description": "User profiles",
-      "documents": [
-        {
-          "id": "userId",
-          "fields": [
-            { "name": "email", "type": "string" },
-            { "name": "created_at", "type": "timestamp" }
-          ]
-        }
-      ]
+  "entities": {
+    "Client": {
+      "title": "Client",
+      "description": "A client of the tailor",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "prenom": { "type": "string", "maxLength": 128 },
+        "nom": { "type": "string", "maxLength": 128 },
+        "telephone": { "type": "string", "maxLength": 64 },
+        "adresse": { "type": "string", "maxLength": 256 },
+        "created_at": { "type": "string", "maxLength": 64 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "user_id", "prenom", "nom", "telephone", "created_at", "updated_at"]
     },
-    {
-      "name": "tailor_data",
-      "description": "Stores the tailor's atelier data",
-      "documents": [
-        {
-          "id": "userId",
-          "fields": [
-            { "name": "settings", "type": "map" },
-            { "name": "clients", "type": "array", "description": "Array of client objects" },
-            { "name": "commandes", "type": "array", "description": "Array of commande objects" },
-            { "name": "mesures", "type": "array", "description": "Array of mesures objects" }
-          ]
-        }
-      ]
+    "Commande": {
+      "title": "Commande",
+      "description": "An order placed by a client",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "client_id": { "type": "string", "maxLength": 128 },
+        "reference": { "type": "string", "maxLength": 128 },
+        "date_commande": { "type": "string", "maxLength": 64 },
+        "date_livraison": { "type": "string", "maxLength": 64 },
+        "type_vetement": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 2048 },
+        "image_tissu": { "type": "string" },
+        "image_modele": { "type": "string" },
+        "statut": { "type": "string", "enum": ["en_cours", "pret", "solde"] },
+        "prix_global": { "type": "number" },
+        "avance": { "type": "number" },
+        "reste_a_payer": { "type": "number" },
+        "created_at": { "type": "string", "maxLength": 64 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "user_id", "client_id", "reference", "date_commande", "date_livraison", "type_vetement", "statut", "prix_global", "avance", "reste_a_payer", "created_at", "updated_at"]
+    },
+    "Mesures": {
+      "title": "Mesures",
+      "description": "Measurements for an order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "commande_id": { "type": "string", "maxLength": 128 },
+        "poitrine": { "type": "number" },
+        "taille": { "type": "number" },
+        "manche": { "type": "number" },
+        "epaules": { "type": "number" },
+        "fesses": { "type": "number" },
+        "cuisses": { "type": "number" },
+        "longueur_chemise": { "type": "number" },
+        "longueur_jupe": { "type": "number" },
+        "longueur_robe": { "type": "number" },
+        "unite": { "type": "string", "enum": ["cm", "inch"] },
+        "created_at": { "type": "string", "maxLength": 64 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "user_id", "commande_id", "unite", "created_at", "updated_at"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Tailor settings",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string", "maxLength": 128 },
+        "nom_atelier": { "type": "string", "maxLength": 128 },
+        "devise": { "type": "string", "maxLength": 16 },
+        "unite_mesure": { "type": "string", "enum": ["cm", "inch"] },
+        "theme": { "type": "string", "enum": ["light", "dark", "system"] }
+      },
+      "required": ["user_id", "nom_atelier", "devise", "unite_mesure", "theme"]
     }
-  ]
+  },
+  "firestore": {
+    "clients/{clientId}": {
+      "schema": { "$ref": "#/entities/Client" },
+      "description": "Stores client records"
+    },
+    "commandes/{commandeId}": {
+      "schema": { "$ref": "#/entities/Commande" },
+      "description": "Stores order records"
+    },
+    "mesures/{mesureId}": {
+      "schema": { "$ref": "#/entities/Mesures" },
+      "description": "Stores measurement records"
+    },
+    "settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Settings" },
+      "description": "Stores atelier settings"
+    }
+  }
 }

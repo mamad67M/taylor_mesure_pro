@@ -63,14 +63,13 @@ export default function App() {
 
   // Auth Listener
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        DBService.setUserId(currentUser.uid);
-        await DBService.syncFromCloud();
+        DBService.initListeners();
         setShowAuthPage(false);
       } else {
-        DBService.setUserId(null);
+        DBService.clearAllLocal();
       }
       setAuthLoading(false);
     });

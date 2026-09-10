@@ -182,7 +182,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onBack }) => {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Ex: Mariama SOW"
+                placeholder="Ex: Amadou Fall"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0D1B2A] focus:ring-1 focus:ring-[#0D1B2A] outline-none transition"
                 required
               />

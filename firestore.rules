@@ -1,11 +1,82 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+    
+    match /{document=**} {
+      allow read, write: if false;
     }
-    match /tailor_data/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidString(val, maxLen) {
+      return val is string && val.size() <= maxLen;
+    }
+
+    match /clients/{clientId} {
+      allow read: if isOwner(resource.data.user_id);
+      allow create: if isOwner(request.resource.data.user_id)
+                    && request.resource.data.keys().hasAll(['id', 'user_id', 'prenom', 'nom', 'telephone', 'created_at', 'updated_at'])
+                    && isValidString(request.resource.data.id, 128)
+                    && isValidString(request.resource.data.user_id, 128)
+                    && isValidString(request.resource.data.prenom, 128)
+                    && isValidString(request.resource.data.nom, 128)
+                    && isValidString(request.resource.data.telephone, 64)
+                    && isValidString(request.resource.data.created_at, 64)
+                    && isValidString(request.resource.data.updated_at, 64);
+      allow update: if isOwner(resource.data.user_id) 
+                    && isOwner(request.resource.data.user_id)
+                    && request.resource.data.id == resource.data.id
+                    && request.resource.data.created_at == resource.data.created_at;
+      allow delete: if isOwner(resource.data.user_id);
+    }
+
+    match /commandes/{commandeId} {
+      allow read: if isOwner(resource.data.user_id);
+      allow create: if isOwner(request.resource.data.user_id)
+                    && request.resource.data.keys().hasAll(['id', 'user_id', 'client_id', 'reference', 'date_commande', 'date_livraison', 'type_vetement', 'statut', 'prix_global', 'avance', 'reste_a_payer', 'created_at', 'updated_at'])
+                    && isValidString(request.resource.data.id, 128)
+                    && isValidString(request.resource.data.user_id, 128)
+                    && isValidString(request.resource.data.client_id, 128)
+                    && request.resource.data.statut in ['en_cours', 'pret', 'solde']
+                    && request.resource.data.prix_global is number
+                    && request.resource.data.avance is number
+                    && request.resource.data.reste_a_payer is number;
+      allow update: if isOwner(resource.data.user_id)
+                    && isOwner(request.resource.data.user_id)
+                    && request.resource.data.id == resource.data.id
+                    && request.resource.data.created_at == resource.data.created_at;
+      allow delete: if isOwner(resource.data.user_id);
+    }
+
+    match /mesures/{mesureId} {
+      allow read: if isOwner(resource.data.user_id);
+      allow create: if isOwner(request.resource.data.user_id)
+                    && request.resource.data.keys().hasAll(['id', 'user_id', 'commande_id', 'unite', 'created_at', 'updated_at'])
+                    && isValidString(request.resource.data.id, 128)
+                    && isValidString(request.resource.data.user_id, 128)
+                    && isValidString(request.resource.data.commande_id, 128)
+                    && request.resource.data.unite in ['cm', 'inch'];
+      allow update: if isOwner(resource.data.user_id)
+                    && isOwner(request.resource.data.user_id)
+                    && request.resource.data.id == resource.data.id
+                    && request.resource.data.created_at == resource.data.created_at;
+      allow delete: if isOwner(resource.data.user_id);
+    }
+
+    match /settings/{settingId} {
+      allow read: if isOwner(resource.data.user_id);
+      allow create: if isOwner(request.resource.data.user_id)
+                    && request.resource.data.keys().hasAll(['user_id', 'nom_atelier', 'devise', 'unite_mesure', 'theme'])
+                    && isValidString(request.resource.data.user_id, 128);
+      allow update: if isOwner(resource.data.user_id)
+                    && isOwner(request.resource.data.user_id);
+      allow delete: if isOwner(resource.data.user_id);
     }
   }
 }
