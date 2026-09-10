@@ -163,7 +163,7 @@ export default function App() {
     let finalClientId = clientData.clientId;
 
     if (clientData.isNew) {
-      const newClient = DBService.createClient({
+      const newClient = DBService.addClient({
         nom: clientData.nom || 'Client',
         prenom: clientData.prenom || 'Nouveau',
         telephone: clientData.telephone || '',
@@ -174,9 +174,8 @@ export default function App() {
     if (!finalClientId) return;
 
     // Create order + unique measures atomically
-    const { commande } = DBService.createCommandeWithMesures(
-      finalClientId,
-      commandeData,
+    const { commande } = DBService.addCommandeWithMesures(
+      { ...commandeData, client_id: finalClientId },
       mesuresData
     );
 
@@ -192,7 +191,7 @@ export default function App() {
     if (clientToEdit) {
       DBService.updateClient(clientToEdit.id, data);
     } else {
-      const newC = DBService.createClient(data);
+      const newC = DBService.addClient(data);
       setSelectedClientId(newC.id);
       setCurrentTab('clients');
     }

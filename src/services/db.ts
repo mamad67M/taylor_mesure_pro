@@ -140,6 +140,10 @@ export const DBService = {
     return cachedCommandes;
   },
 
+  getCommandesByClient(clientId: string): Commande[] {
+    return cachedCommandes.filter(c => c.client_id === clientId);
+  },
+
   addCommandeWithMesures(
     commandeData: Omit<Commande, 'id' | 'created_at' | 'updated_at' | 'reste_a_payer'>,
     mesuresData: Partial<Mesures>
