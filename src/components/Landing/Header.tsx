@@ -92,6 +92,9 @@ export const Header: React.FC<HeaderProps> = ({ onGoToAuth }) => {
                 {link.label}
               </a>
             ))}
+            <div className="pt-2">
+              <PWAInstallButton />
+            </div>
           </motion.nav>
         )}
       </AnimatePresence>
