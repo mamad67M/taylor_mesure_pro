@@ -46,15 +46,15 @@ export const Header: React.FC<HeaderProps> = ({ onGoToAuth }) => {
             </div>
           </a>
 
-          <div className="flex items-center gap-2.5">
-            <a href="#tarifs" className="hidden sm:inline-flex text-xs uppercase tracking-widest font-semibold text-charcoal px-3 py-2 hover:text-terracotta transition-colors">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a href="#tarifs" className="hidden sm:inline-flex text-[10px] uppercase tracking-widest font-semibold text-charcoal px-3 py-2 hover:text-terracotta transition-colors">
               Tarifs
             </a>
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onGoToAuth} 
-              className="pill-btn text-xs uppercase tracking-wider font-semibold px-4 py-2 rounded-full bg-charcoal text-linen hover:bg-terracotta hover:text-white transition-colors duration-200"
+              className="pill-btn whitespace-nowrap text-[9px] sm:text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-deep-green text-linen hover:bg-opacity-90 transition-all duration-200"
             >
               Essai gratuit
             </motion.button>
