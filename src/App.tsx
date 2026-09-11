@@ -24,6 +24,7 @@ import { EditMesuresModal } from './components/EditMesuresModal';
 import { EditClientModal } from './components/EditClientModal';
 import { LandingPage } from './components/LandingPage';
 import { AuthPage } from './components/AuthPage';
+import { OfflineIndicator } from './components/OfflineIndicator';
 
 export default function App() {
   // Auth state
@@ -286,13 +287,24 @@ export default function App() {
 
   if (!user) {
     if (showAuthPage) {
-      return <AuthPage onBack={() => setShowAuthPage(false)} />;
+      return (
+        <>
+          <AuthPage onBack={() => setShowAuthPage(false)} />
+          <OfflineIndicator />
+        </>
+      );
     }
-    return <LandingPage onGoToAuth={() => setShowAuthPage(true)} />;
+    return (
+      <>
+        <LandingPage onGoToAuth={() => setShowAuthPage(true)} />
+        <OfflineIndicator />
+      </>
+    );
   }
 
   return (
     <div className="min-h-screen bg-[#F7F4EF] text-[#0D1B2A] font-sans antialiased flex flex-col selection:bg-[#D4A017]/30 selection:text-[#0D1B2A]">
+      <OfflineIndicator />
       {/* Navigation Header & Mobile Dock */}
       <Navbar
         currentTab={currentTab}

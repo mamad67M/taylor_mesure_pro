@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
+import { PWAInstallButton } from '../PWAInstallButton';
 
 interface HeaderProps {
   onGoToAuth: () => void;
@@ -47,6 +48,9 @@ export const Header: React.FC<HeaderProps> = ({ onGoToAuth }) => {
           </a>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden sm:block">
+              <PWAInstallButton />
+            </div>
             <a href="#tarifs" className="hidden sm:inline-flex text-[10px] uppercase tracking-widest font-semibold text-charcoal px-3 py-2 hover:text-terracotta transition-colors">
               Tarifs
             </a>
