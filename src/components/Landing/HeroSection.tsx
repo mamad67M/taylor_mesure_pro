@@ -12,28 +12,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onGoToAuth }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        className="flex flex-col items-center text-center"
       >
-        <div className="flex items-center gap-2 mb-3">
-          <span className="h-px w-6 bg-terracotta"></span>
+        <div className="flex items-center justify-center gap-2 mb-4 mt-2">
+          <span className="hidden sm:block h-px w-8 bg-terracotta/60"></span>
           <p className="text-[10px] sm:text-xs tracking-[0.25em] uppercase font-bold text-terracotta font-sans">
             TAILORMESURE PRO — LOGICIEL D'ATELIER & COUTURE
           </p>
+          <span className="hidden sm:block h-px w-8 bg-terracotta/60"></span>
         </div>
 
-        <h1 className="font-serif-editorial text-3xl sm:text-5xl md:text-6xl font-normal leading-[1.08] text-charcoal mb-4 uppercase">
+        <h1 className="font-serif-editorial text-2xl sm:text-4xl md:text-5xl font-medium leading-[1.15] text-charcoal mb-5 uppercase max-w-4xl mx-auto">
           Fini les carnets perdus et les commandes dépassées.
         </h1>
 
-        <p className="text-neutral-700 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl font-light mb-6">
+        <p className="text-neutral-700 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto font-light mb-8">
           L'application moderne conçue pour les maîtres tailleurs et créateurs ouest-africains : gérez vos clients, mesures exactes, acomptes et livraisons en toute sérénité.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-8">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto mb-10">
           <motion.button 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onGoToAuth} 
-            className="pill-btn inline-flex justify-center items-center py-3.5 px-7 rounded-full bg-charcoal text-linen font-medium text-xs tracking-wider uppercase hover:bg-terracotta transition-colors shadow-sm"
+            className="pill-btn inline-flex justify-center items-center py-3.5 px-8 rounded-full bg-deep-green text-linen font-bold text-xs tracking-wider uppercase hover:bg-opacity-90 transition-colors shadow-sm"
           >
             Commencer gratuitement
           </motion.button>
@@ -41,7 +43,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onGoToAuth }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             href="#mockup-interactive" 
-            className="pill-btn inline-flex justify-center items-center py-3.5 px-7 rounded-full border border-charcoal/30 bg-transparent text-charcoal font-medium text-xs tracking-wider uppercase hover:bg-charcoal/5 transition-colors"
+            className="pill-btn inline-flex justify-center items-center py-3.5 px-8 rounded-full border border-charcoal/20 bg-transparent text-charcoal font-bold text-xs tracking-wider uppercase hover:bg-charcoal/5 transition-colors"
           >
             Voir la démo
           </motion.a>
