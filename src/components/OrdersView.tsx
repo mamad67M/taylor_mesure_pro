@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Plus, Calendar, ArrowUpDown, Filter, ChevronRight, User } from 'lucide-react';
+import { Search, Plus, Calendar, ArrowUpDown, Filter, ChevronRight, User, LayoutGrid, List } from 'lucide-react';
 import { Commande, Client, StatutCommande, CommandeFilter, CommandeSort, AtelierSettings } from '../types';
 import { StatusBadge } from './StatusBadge';
 import { formatCurrency, formatDateFrench, getDeliveryRelativeText } from '../utils/format';
 import { EmptyState } from './EmptyState';
+import { KanbanBoard } from './KanbanBoard';
 
 interface OrdersViewProps {
   commandes: Commande[];
@@ -14,6 +15,7 @@ interface OrdersViewProps {
   onSelectCommande: (id: string) => void;
   onSelectClient: (clientId: string) => void;
   onOpenNewOrder: () => void;
+  onUpdateOrderStatus?: (id: string, statut: StatutCommande) => void;
 }
 
 export const OrdersView: React.FC<OrdersViewProps> = ({
@@ -25,9 +27,11 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
   onSelectCommande,
   onSelectClient,
   onOpenNewOrder,
+  onUpdateOrderStatus,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<CommandeSort>('livraison');
+  const [viewMode, setViewMode] = useState<'list' | 'kanban'>('kanban');
 
   // Client lookup dictionary
   const clientMap = useMemo(() => {
@@ -198,7 +202,7 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
         {/* Sort selector */}
         <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-[#0D1B2A]/10 shadow-2xs text-xs">
           <ArrowUpDown size={14} className="text-[#0D1B2A]/50" />
-          <span className="text-[#0D1B2A]/60 font-medium whitespace-nowrap">Trier par :</span>
+          <span className="text-[#0D1B2A]/60 font-medium whitespace-nowrap hidden sm:inline">Trier par :</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as CommandeSort)}
@@ -208,6 +212,24 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
             <option value="recent">Plus récent</option>
             <option value="statut">Statut</option>
           </select>
+        </div>
+
+        {/* View Mode Toggle */}
+        <div className="flex items-center bg-white rounded-xl border border-[#0D1B2A]/10 shadow-2xs p-1">
+          <button
+            onClick={() => setViewMode('list')}
+            className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-[#0D1B2A]/10 text-[#0D1B2A]' : 'text-[#0D1B2A]/40 hover:text-[#0D1B2A]/70'}`}
+            title="Vue Liste"
+          >
+            <List size={16} />
+          </button>
+          <button
+            onClick={() => setViewMode('kanban')}
+            className={`p-1.5 rounded-lg transition-colors ${viewMode === 'kanban' ? 'bg-[#0D1B2A]/10 text-[#0D1B2A]' : 'text-[#0D1B2A]/40 hover:text-[#0D1B2A]/70'}`}
+            title="Vue Kanban"
+          >
+            <LayoutGrid size={16} />
+          </button>
         </div>
       </div>
 
@@ -227,6 +249,15 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
             onFilterChange('toutes');
           }}
           actionLabel="Réinitialiser les filtres"
+        />
+      ) : viewMode === 'kanban' && onUpdateOrderStatus ? (
+        <KanbanBoard
+          commandes={processedCommandes}
+          clientMap={clientMap}
+          settings={settings}
+          onSelectCommande={onSelectCommande}
+          onSelectClient={onSelectClient}
+          onUpdateStatus={onUpdateOrderStatus}
         />
       ) : (
         <div className="space-y-3">
