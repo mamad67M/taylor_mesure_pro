@@ -25,6 +25,7 @@ import { EditClientModal } from './components/EditClientModal';
 import { LandingPage } from './components/LandingPage';
 import { AuthPage } from './components/AuthPage';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { GlobalSearchModal } from './components/GlobalSearchModal';
 
 export default function App() {
   // Auth state
@@ -58,6 +59,7 @@ export default function App() {
 
   const [showClientModal, setShowClientModal] = useState(false);
   const [clientToEdit, setClientToEdit] = useState<Client | undefined>(undefined);
+  const [showGlobalSearch, setShowGlobalSearch] = useState(false);
 
   const [showEditOrderModal, setShowEditOrderModal] = useState(false);
   const [showEditMesuresModal, setShowEditMesuresModal] = useState(false);
@@ -310,6 +312,7 @@ export default function App() {
         currentTab={currentTab}
         onTabChange={handleTabChange}
         onOpenNewOrder={() => handleOpenOrderWizard()}
+        onOpenSearch={() => setShowGlobalSearch(true)}
         totalClientsCount={clients.length}
         totalCommandesCount={commandes.length}
       />
@@ -461,6 +464,16 @@ export default function App() {
           onSave={handleSaveEditedMesures}
         />
       )}
+
+      {/* MODAL: GLOBAL SEARCH */}
+      <GlobalSearchModal
+        isOpen={showGlobalSearch}
+        onClose={() => setShowGlobalSearch(false)}
+        clients={clients}
+        commandes={commandes}
+        onSelectClient={handleSelectClient}
+        onSelectCommande={handleSelectCommande}
+      />
     </div>
   );
 }
