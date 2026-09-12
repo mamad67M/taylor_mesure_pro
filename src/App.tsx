@@ -360,6 +360,7 @@ export default function App() {
                 onSelectCommande={handleSelectCommande}
                 onSelectClient={handleSelectClient}
                 onOpenNewOrder={() => handleOpenOrderWizard()}
+                onUpdateOrderStatus={(id, status) => DBService.updateCommandeStatus(id, status)}
               />
             )}
           </>
