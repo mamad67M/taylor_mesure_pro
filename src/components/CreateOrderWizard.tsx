@@ -15,6 +15,7 @@ import {
   AlertCircle,
   Clock,
   CheckCircle2,
+  History,
 } from 'lucide-react';
 import { Client, AtelierSettings, StatutCommande } from '../types';
 import { formatCurrency, formatDateFrench, processImageFile } from '../utils/format';
@@ -24,6 +25,8 @@ import { Mesures } from '../types';
 
 interface CreateOrderWizardProps {
   clients: Client[];
+  commandes: Commande[];
+  mesuresList: Mesures[];
   settings: AtelierSettings;
   preselectedClientId?: string;
   onClose: () => void;
@@ -55,6 +58,8 @@ interface CreateOrderWizardProps {
 
 export const CreateOrderWizard: React.FC<CreateOrderWizardProps> = ({
   clients,
+  commandes,
+  mesuresList,
   settings,
   preselectedClientId,
   onClose,
@@ -94,6 +99,15 @@ export const CreateOrderWizard: React.FC<CreateOrderWizardProps> = ({
     longueur_jupe: '' as string | number,
     longueur_robe: '' as string | number,
   });
+
+  // --- Smart Memory Logic ---
+  const clientCommandes = (commandes || []).filter(c => c.client_id === selectedClientId);
+  const clientCommandeIds = clientCommandes.map(c => c.id);
+  const pastMesures = (mesuresList || []).filter(m => clientCommandeIds.includes(m.commande_id))
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  
+  const latestMesures = pastMesures.length > 0 ? pastMesures[0] : null;
+  const latestCommande = latestMesures ? clientCommandes.find(c => c.id === latestMesures.commande_id) : null;
 
   // Step 3: Paiement State
   const [prixGlobal, setPrixGlobal] = useState<string>('50000');
@@ -677,6 +691,40 @@ export const CreateOrderWizard: React.FC<CreateOrderWizardProps> = ({
               {/* STEP 2: MESURES (9 fields with quick adjustment buttons) */}
               {currentStep === 2 && (
                 <div className="space-y-3">
+                  {clientMode === 'existing' && latestMesures && latestCommande && (
+                    <div className="bg-white p-3 sm:p-4 rounded-xl border border-[#D4A017] shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-[#D4A017]"></div>
+                      <div className="pl-2">
+                        <h4 className="text-sm font-bold text-[#0D1B2A] flex items-center gap-2">
+                          <History size={16} className="text-[#D4A017]" />
+                          Mémoire Intelligente
+                        </h4>
+                        <p className="text-xs text-[#0D1B2A]/70 mt-1">
+                          Mesures de la commande <strong className="text-[#0D1B2A]">{latestCommande.reference}</strong> (enregistrées le {formatDateFrench(latestMesures.created_at)}).
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMesures({
+                            poitrine: latestMesures.poitrine || '',
+                            taille: latestMesures.taille || '',
+                            manche: latestMesures.manche || '',
+                            epaules: latestMesures.epaules || '',
+                            fesses: latestMesures.fesses || '',
+                            cuisses: latestMesures.cuisses || '',
+                            longueur_chemise: latestMesures.longueur_chemise || '',
+                            longueur_jupe: latestMesures.longueur_jupe || '',
+                            longueur_robe: latestMesures.longueur_robe || '',
+                          });
+                        }}
+                        className="w-full sm:w-auto bg-[#D4A017]/10 hover:bg-[#D4A017]/20 border border-[#D4A017]/30 text-[#0D1B2A] px-4 py-2 rounded-xl text-xs font-bold transition-colors whitespace-nowrap flex-shrink-0"
+                      >
+                        Réutiliser ces mesures
+                      </button>
+                    </div>
+                  )}
+
                   <div className="bg-[#D4A017]/15 p-3 rounded-xl border border-[#D4A017]/30 text-xs text-[#0D1B2A] flex items-center gap-2">
                     <Scissors size={16} className="text-[#0D1B2A] flex-shrink-0" />
                     <span>
