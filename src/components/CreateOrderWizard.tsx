@@ -19,6 +19,8 @@ import {
 import { Client, AtelierSettings, StatutCommande } from '../types';
 import { formatCurrency, formatDateFrench, processImageFile } from '../utils/format';
 import { SAMPLE_FABRIC_IMAGES } from '../utils/sampleData';
+import { MannequinVisualizer } from './MannequinVisualizer';
+import { Mesures } from '../types';
 
 interface CreateOrderWizardProps {
   clients: Client[];
@@ -80,6 +82,7 @@ export const CreateOrderWizard: React.FC<CreateOrderWizardProps> = ({
   const cameraInputModeleRef = useRef<HTMLInputElement>(null);
 
   // Step 2: Mesures State (default nulls)
+  const [activeMesureField, setActiveMesureField] = useState<keyof Mesures | null>(null);
   const [mesures, setMesures] = useState({
     poitrine: '' as string | number,
     taille: '' as string | number,
@@ -258,7 +261,7 @@ export const CreateOrderWizard: React.FC<CreateOrderWizardProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-[#F7F4EF] w-full max-w-xl rounded-3xl shadow-2xl border border-[#0D1B2A]/10 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="bg-[#F7F4EF] w-full max-w-3xl rounded-3xl shadow-2xl border border-[#0D1B2A]/10 overflow-hidden flex flex-col max-h-[92vh]">
         {/* Modal Top Header */}
         <div className="bg-[#0D1B2A] text-white px-5 py-4 flex items-center justify-between border-b border-[#D4A017]/30 flex-shrink-0">
           <div>
@@ -699,9 +702,9 @@ export const CreateOrderWizard: React.FC<CreateOrderWizardProps> = ({
                       return (
                         <div
                           key={f.key}
-                          className="flex items-center justify-between gap-2 p-2 rounded-xl bg-[#F7F4EF]/60 border border-[#0D1B2A]/5"
+                          className={`flex items-center justify-between gap-2 p-2 rounded-xl border transition-all ${ activeMesureField === fieldKey ? 'bg-white border-[#D4A017] shadow-sm ring-1 ring-[#D4A017]/20' : 'bg-[#F7F4EF]/60 border-[#0D1B2A]/5' }`} onMouseEnter={() => setActiveMesureField(fieldKey)} onMouseLeave={() => setActiveMesureField(null)} onFocus={() => setActiveMesureField(fieldKey)} onBlur={() => setActiveMesureField(null)}
                         >
-                          <label className="text-xs font-semibold text-[#0D1B2A] flex-1">
+                          <label className={`text-xs font-semibold flex-1 transition-colors ${ activeMesureField === fieldKey ? 'text-[#D4A017]' : 'text-[#0D1B2A]' }`}>
                             {f.label}
                           </label>
 
