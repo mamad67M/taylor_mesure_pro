@@ -99,7 +99,7 @@ export const EditMesuresModal: React.FC<EditMesuresModalProps> = ({
           </div>
 
           <div className="flex flex-col sm:flex-row gap-6 items-start">
-            <div className="w-full sm:w-1/3 bg-white p-4 rounded-2xl border border-[#0D1B2A]/10 flex flex-col items-center justify-center sticky top-0 shadow-sm">
+            <div className="hidden sm:flex w-full sm:w-1/3 bg-white p-4 rounded-2xl border border-[#0D1B2A]/10 flex-col items-center justify-center sticky top-0 shadow-sm">
               <MannequinVisualizer activeField={activeField} />
               <p className="text-[10px] text-center text-[#0D1B2A]/50 mt-4 leading-tight">
                 Survolez ou cliquez sur un champ pour voir où placer le mètre ruban.
