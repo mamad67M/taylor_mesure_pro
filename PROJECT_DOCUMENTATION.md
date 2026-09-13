@@ -14,6 +14,7 @@ Ce document contient toutes les informations contextuelles, techniques et concep
 * **Base de données & Backend :** Firebase (Firestore pour la base de données NoSQL, Firebase Auth pour l'authentification).
 * **Icônes :** `lucide-react`.
 * **Animations :** `motion/react` (Framer Motion) pour des transitions fluides et professionnelles.
+* **Interactions avancées :** `@dnd-kit` pour le glisser-déposer (Kanban), `fuse.js` pour la recherche globale intelligente (Fuzzy Search).
 * **Architecture :** Single Page Application (SPA) 100% client-side (pas de serveur backend customisé tel que Express, tout passe par les SDK Firebase côté client).
 
 ## 3. Design System & Charte Graphique (Crucial)
@@ -58,8 +59,9 @@ service cloud.firestore {
 2. **Authentification :**
    * Système de Login/Signup géré par Firebase.
 3. **Tableau de bord (Cockpit) :**
+   * **Recherche Globale (Fuzzy Search) :** Une barre de recherche omniprésente (icône loupe) propulsée par `fuse.js`. Elle permet de rechercher intelligemment (tolérance aux fautes) parmi les clients (nom, téléphone) et les commandes (référence, tissu), avec redirection instantanée vers la fiche détaillée.
    * **Vue Clients :** Liste des clients, création d'un client.
-   * **Vue Commandes :** Wizard (assistant) de création de commande permettant de lier un client existant, de définir un prix total et un acompte (calculant automatiquement le reste à payer), et d'assigner les mesures.
+   * **Vue Commandes :** Affichage basculable entre Liste classique et Vue Kanban (style Trello). Le Kanban utilise `@dnd-kit` pour permettre le glisser-déposer (Drag & Drop) fluide des commandes entre les statuts (En cours, Prêt à livrer, Soldées), mettant à jour la base de données instantanément. Intègre également le Wizard (assistant) de création de commande (client, prix, acompte, mesures).
    * **Vue Mesures :** Formulaire détaillé pour enregistrer toutes les mensurations.
 
 ## 6. Subtilités Techniques à Respecter par l'IA Repreneuse
