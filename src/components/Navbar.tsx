@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Users, Scissors, Plus, Settings } from 'lucide-react';
+import { Home, Users, Scissors, Plus, Settings, Search } from 'lucide-react';
 import { Logo } from './Logo';
 import { ViewTab } from '../types';
 import { WaxHeaderPattern } from './WaxDecorations';
@@ -8,6 +8,7 @@ interface NavbarProps {
   currentTab: ViewTab;
   onTabChange: (tab: ViewTab) => void;
   onOpenNewOrder: () => void;
+  onOpenSearch: () => void;
   totalClientsCount?: number;
   totalCommandesCount?: number;
 }
@@ -16,6 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   onTabChange,
   onOpenNewOrder,
+  onOpenSearch,
   totalClientsCount,
   totalCommandesCount,
 }) => {
@@ -104,6 +106,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Plus size={16} strokeWidth={2.5} />
               <span>+ Nouvelle</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onOpenSearch}
+              title="Rechercher"
+              className="p-2 rounded-xl border bg-white/10 hover:bg-white/20 text-white/90 border-white/10 transition sm:ml-1"
+            >
+              <Search size={18} />
             </button>
 
             <button
