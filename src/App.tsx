@@ -423,6 +423,8 @@ export default function App() {
       {showOrderWizard && (
         <CreateOrderWizard
           clients={clients}
+          commandes={commandes}
+          mesuresList={mesuresList}
           settings={settings}
           preselectedClientId={wizardPreselectedClientId}
           onClose={() => {
