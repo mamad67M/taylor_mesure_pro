@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Ruler, Check, Scissors } from 'lucide-react';
 import { Mesures } from '../types';
+import { MannequinVisualizer } from './MannequinVisualizer';
 
 interface EditMesuresModalProps {
   mesures: Mesures;
@@ -15,6 +16,7 @@ export const EditMesuresModal: React.FC<EditMesuresModalProps> = ({
   onClose,
   onSave,
 }) => {
+  const [activeField, setActiveField] = useState<keyof Mesures | null>(null);
   const [form, setForm] = useState({
     poitrine: mesures.poitrine !== null ? String(mesures.poitrine) : '',
     taille: mesures.taille !== null ? String(mesures.taille) : '',
@@ -64,7 +66,7 @@ export const EditMesuresModal: React.FC<EditMesuresModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-[#F7F4EF] w-full max-w-lg rounded-3xl shadow-2xl border border-[#0D1B2A]/10 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="bg-[#F7F4EF] w-full max-w-3xl rounded-3xl shadow-2xl border border-[#0D1B2A]/10 overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
         <div className="bg-[#0D1B2A] text-white px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -96,13 +98,20 @@ export const EditMesuresModal: React.FC<EditMesuresModalProps> = ({
             </span>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-[#0D1B2A]/10 space-y-2.5">
+          <div className="flex flex-col sm:flex-row gap-6 items-start">
+            <div className="w-full sm:w-1/3 bg-white p-4 rounded-2xl border border-[#0D1B2A]/10 flex flex-col items-center justify-center sticky top-0 shadow-sm">
+              <MannequinVisualizer activeField={activeField} />
+              <p className="text-[10px] text-center text-[#0D1B2A]/50 mt-4 leading-tight">
+                Survolez ou cliquez sur un champ pour voir où placer le mètre ruban.
+              </p>
+            </div>
+            <div className="w-full sm:w-2/3 bg-white p-4 rounded-2xl border border-[#0D1B2A]/10 space-y-2.5 shadow-sm">
             {fields.map(f => (
               <div
                 key={f.key}
-                className="flex items-center justify-between gap-2 p-2 rounded-xl bg-[#F7F4EF]/60 border border-[#0D1B2A]/5"
+                className={`flex items-center justify-between gap-2 p-2 rounded-xl border transition-all ${ activeField === f.key ? 'bg-white border-[#D4A017] shadow-sm ring-1 ring-[#D4A017]/20' : 'bg-[#F7F4EF]/60 border-[#0D1B2A]/5' }`} onMouseEnter={() => setActiveField(f.key)} onMouseLeave={() => setActiveField(null)} onFocus={() => setActiveField(f.key)} onBlur={() => setActiveField(null)}
               >
-                <label className="text-xs font-semibold text-[#0D1B2A] flex-1">
+                <label className={`text-xs font-semibold flex-1 transition-colors ${ activeField === f.key ? 'text-[#D4A017]' : 'text-[#0D1B2A]' }`}>
                   {f.label}
                 </label>
 
@@ -141,6 +150,7 @@ export const EditMesuresModal: React.FC<EditMesuresModalProps> = ({
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </div>
 
