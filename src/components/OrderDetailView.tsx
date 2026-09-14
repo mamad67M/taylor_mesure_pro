@@ -91,14 +91,13 @@ export const OrderDetailView: React.FC<OrderDetailViewProps> = ({
     { key: 'longueur_robe', label: 'Longueur robe', value: mesures.longueur_robe },
   ];
 
-  // WhatsApp receipt message generator
-  const generateWhatsAppMessage = () => {
+  // WhatsApp message generators
+  const generateWhatsAppReceipt = () => {
     const text = `*Reçu de Commande - ${settings.nom_atelier || 'MesurePro'}*
 Client : ${client.prenom} ${client.nom}
 Commande : ${commande.reference}
 Tissu : ${commande.nom_tissu || 'Tissu couture'}
 Livraison prévue : ${formatDateFrench(commande.date_livraison)}
-Statut : ${commande.statut === 'en_cours' ? 'En cours' : commande.statut === 'pret' ? 'Prêt pour retrait' : 'Soldé'}
 
 *Paiement :*
 • Prix global : ${formatCurrency(commande.prix_global, settings.devise)}
@@ -106,9 +105,28 @@ Statut : ${commande.statut === 'en_cours' ? 'En cours' : commande.statut === 'pr
 • *Reste à payer : ${formatCurrency(commande.reste_a_payer, settings.devise)}*
 
 Merci pour votre confiance !`;
-
     return encodeURIComponent(text);
   };
+
+  const generateWhatsAppReady = () => {
+    const text = `Bonjour ${client.prenom} ${client.nom},
+Votre tenue (${commande.nom_tissu || 'Tissu couture'}) est prête pour l'essayage à l'atelier ! 
+N'hésitez pas à passer quand vous le souhaitez.
+
+*Reste à payer : ${formatCurrency(commande.reste_a_payer, settings.devise)}*
+À très vite, ${settings.nom_atelier || 'MesurePro'}`;
+    return encodeURIComponent(text);
+  };
+
+  const generateWhatsAppReminder = () => {
+    const text = `Bonjour ${client.prenom} ${client.nom},
+Petit rappel amical de la part de ${settings.nom_atelier || 'MesurePro'}.
+Le solde de votre commande (${commande.reference}) s'élève à ${formatCurrency(commande.reste_a_payer, settings.devise)}.
+Merci de nous contacter pour régulariser. Bonne journée !`;
+    return encodeURIComponent(text);
+  };
+
+  const generateWhatsAppMessage = generateWhatsAppReceipt; // Fallback for the small header icon
 
   const handleShare = () => {
     const shareText = `Commande ${commande.reference} - ${client.prenom} ${client.nom} - Reste : ${formatCurrency(commande.reste_a_payer, settings.devise)}`;
@@ -259,18 +277,50 @@ Merci pour votre confiance !`;
               <Phone size={14} className="text-[#D4A017]" />
               <span>Appeler</span>
             </a>
-
-            <a
-              href={`https://wa.me/${client.telephone.replace(/[^0-9]/g, '')}?text=${generateWhatsAppMessage()}`}
-              target="_blank"
-              rel="noreferrer"
-              className="p-2 rounded-xl bg-[#1F4D3A] text-white hover:bg-[#163a2c] transition active:scale-95 shadow-xs"
-              title="Envoyer reçu WhatsApp"
-            >
-              <MessageCircle size={17} />
-            </a>
           </div>
         </div>
+        
+        {/* WhatsApp Quick Actions */}
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <MessageCircle size={14} className="text-[#1F4D3A]" />
+            <span className="text-xs font-bold text-[#0D1B2A]">Actions rapides WhatsApp</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <a
+              href={`https://wa.me/${client.telephone.replace(/[^0-9]/g, '')}?text=${generateWhatsAppReceipt()}`}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#1F4D3A] text-xs font-semibold transition-colors border border-[#25D366]/30"
+            >
+              <MessageCircle size={14} />
+              <span>Envoyer le reçu</span>
+            </a>
+            
+            <a
+              href={`https://wa.me/${client.telephone.replace(/[^0-9]/g, '')}?text=${generateWhatsAppReady()}`}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#1F4D3A] text-xs font-semibold transition-colors border border-[#25D366]/30"
+            >
+              <MessageCircle size={14} />
+              <span>Prêt pour essayage</span>
+            </a>
+            
+            {commande.reste_a_payer > 0 && (
+              <a
+                href={`https://wa.me/${client.telephone.replace(/[^0-9]/g, '')}?text=${generateWhatsAppReminder()}`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-semibold transition-colors border border-orange-200 sm:col-span-2"
+              >
+                <MessageCircle size={14} />
+                <span>Relance solde impayé</span>
+              </a>
+            )}
+          </div>
+        </div>
+
       </div>
 
       {/* Fabric Section: Grande photo du tissu */}
