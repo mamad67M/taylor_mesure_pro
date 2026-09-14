@@ -249,32 +249,39 @@ export const EditOrderModal: React.FC<EditOrderModalProps> = ({
             <div>
               <label className="text-xs font-bold text-[#0D1B2A] flex items-center justify-between mb-1">
                 <span>Statut de la commande</span>
-                {commande.statut === 'solde' && (
+                {(commande.statut === 'solde' || commande.statut === 'livre') && (
                   <span className="text-[10px] text-[#D4A017] font-medium bg-[#D4A017]/10 px-2 py-0.5 rounded-full">
                     Statut verrouillé
                   </span>
                 )}
               </label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['en_cours', 'pret', 'solde'] as StatutCommande[]).map(st => (
-                  <button
-                    key={st}
-                    type="button"
-                    disabled={commande.statut === 'solde'}
-                    onClick={() => setStatut(st)}
-                    className={`py-2 rounded-xl text-xs font-bold border transition ${
-                      statut === st
-                        ? st === 'en_cours'
-                          ? 'bg-[#0D1B2A] text-white border-[#0D1B2A]'
-                          : st === 'pret'
-                          ? 'bg-[#D4A017] text-[#0D1B2A] border-[#D4A017]'
-                          : 'bg-[#1F4D3A] text-white border-[#1F4D3A]'
-                        : 'bg-white text-gray-700 border-gray-200'
-                    } ${commande.statut === 'solde' && st !== 'solde' ? 'opacity-30 cursor-not-allowed' : ''}`}
-                  >
-                    {st === 'en_cours' ? 'En cours' : st === 'pret' ? 'Prêt' : 'Soldé'}
-                  </button>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {(['coupe', 'couture', 'pret', 'livre'] as StatutCommande[]).map(st => {
+                  let isSelected = statut === st;
+                  // Handle legacy mappings visually in the edit state if the DB hasn't updated yet
+                  if (statut === 'en_cours' && st === 'couture') isSelected = true;
+                  if (statut === 'solde' && st === 'livre') isSelected = true;
+
+                  const colorClass = 
+                    st === 'coupe' ? 'bg-gray-700 text-white border-gray-700' :
+                    st === 'couture' ? 'bg-orange-600 text-white border-orange-600' :
+                    st === 'pret' ? 'bg-blue-600 text-white border-blue-600' :
+                    'bg-green-600 text-white border-green-600';
+
+                  return (
+                    <button
+                      key={st}
+                      type="button"
+                      disabled={commande.statut === 'solde' || commande.statut === 'livre'}
+                      onClick={() => setStatut(st)}
+                      className={`py-2 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-1 ${
+                        isSelected ? colorClass : 'bg-white text-gray-700 border-gray-200'
+                      } $((commande.statut === 'solde' || commande.statut === 'livre') && !isSelected ? 'opacity-30 cursor-not-allowed' : '')`}
+                    >
+                      {st === 'coupe' ? '✂️ Coupe' : st === 'couture' ? '🧵 Couture' : st === 'pret' ? '👔 Prêt' : '✅ Livré'}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
