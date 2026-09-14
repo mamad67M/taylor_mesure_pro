@@ -76,29 +76,54 @@ export interface StatusStyle {
 }
 
 export const STATUS_CONFIG: Record<StatutCommande, StatusStyle> = {
-  en_cours: {
-    id: 'en_cours',
-    label: 'En cours',
-    badgeBg: 'bg-[#0D1B2A]/10',
-    badgeText: 'text-[#0D1B2A]',
-    badgeBorder: 'border-[#0D1B2A]/30',
-    colorHex: '#0D1B2A',
+  coupe: {
+    id: 'coupe',
+    label: '✂️ Coupe',
+    badgeBg: 'bg-gray-100',
+    badgeText: 'text-gray-700',
+    badgeBorder: 'border-gray-200',
+    colorHex: '#4B5563', // gray-600
+  },
+  couture: {
+    id: 'couture',
+    label: '🧵 En Couture',
+    badgeBg: 'bg-orange-100',
+    badgeText: 'text-orange-700',
+    badgeBorder: 'border-orange-200',
+    colorHex: '#C2410C', // orange-700
   },
   pret: {
     id: 'pret',
-    label: 'Prêt',
-    badgeBg: 'bg-[#D4A017]/15',
-    badgeText: 'text-[#9A7000]',
-    badgeBorder: 'border-[#D4A017]/40',
-    colorHex: '#D4A017',
+    label: '👔 Prêt pour Essayage',
+    badgeBg: 'bg-blue-100',
+    badgeText: 'text-blue-700',
+    badgeBorder: 'border-blue-200',
+    colorHex: '#1D4ED8', // blue-700
+  },
+  livre: {
+    id: 'livre',
+    label: '✅ Livré',
+    badgeBg: 'bg-green-100',
+    badgeText: 'text-green-700',
+    badgeBorder: 'border-green-200',
+    colorHex: '#15803D', // green-700
+  },
+  // Fallbacks for old data
+  en_cours: {
+    id: 'en_cours',
+    label: '🧵 En Couture',
+    badgeBg: 'bg-orange-100',
+    badgeText: 'text-orange-700',
+    badgeBorder: 'border-orange-200',
+    colorHex: '#C2410C',
   },
   solde: {
     id: 'solde',
-    label: 'Soldé',
-    badgeBg: 'bg-[#1F4D3A]/12',
-    badgeText: 'text-[#1F4D3A]',
-    badgeBorder: 'border-[#1F4D3A]/30',
-    colorHex: '#1F4D3A',
+    label: '✅ Livré',
+    badgeBg: 'bg-green-100',
+    badgeText: 'text-green-700',
+    badgeBorder: 'border-green-200',
+    colorHex: '#15803D',
   },
 };
 
