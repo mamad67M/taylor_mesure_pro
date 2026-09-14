@@ -128,46 +128,35 @@ export const STATUS_CONFIG: Record<StatutCommande, StatusStyle> = {
 };
 
 // Client-side image compression for reliable local & storage persistence
-export function processImageFile(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 1000;
-        const MAX_HEIGHT = 1000;
-        let width = img.width;
-        let height = img.height;
+import imageCompression from 'browser-image-compression';
 
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
-        }
+export async function processImageFile(file: File): Promise<string> {
+  if (!file || !file.type.startsWith('image/')) {
+    throw new Error("Le fichier n'est pas une image valide.");
+  }
 
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          resolve(e.target?.result as string);
-          return;
-        }
+  const options = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 800,
+    useWebWorker: true,
+    fileType: 'image/jpeg',
+    initialQuality: 0.8
+  };
 
-        ctx.drawImage(img, 0, 0, width, height);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-        resolve(dataUrl);
+  try {
+    const compressedFile = await imageCompression(file, options);
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(compressedFile);
+      reader.onloadend = () => {
+        resolve(reader.result as string);
       };
-      img.onerror = () => reject(new Error("Impossible de charger l'image."));
-      img.src = e.target?.result as string;
-    };
-    reader.onerror = () => reject(new Error('Erreur de lecture du fichier.'));
-    reader.readAsDataURL(file);
-  });
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  } catch (error) {
+    console.error("Erreur de compression d'image:", error);
+    throw new Error("Impossible de traiter l'image. Veuillez réessayer.");
+  }
 }
