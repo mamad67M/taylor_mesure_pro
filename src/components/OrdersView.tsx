@@ -44,9 +44,10 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
   const filterCounts = useMemo(() => {
     return {
       toutes: commandes.length,
-      en_cours: commandes.filter(c => c.statut === 'en_cours').length,
+      coupe: commandes.filter(c => c.statut === 'coupe').length,
+      couture: commandes.filter(c => c.statut === 'couture' || c.statut === 'en_cours').length,
       pret: commandes.filter(c => c.statut === 'pret').length,
-      solde: commandes.filter(c => c.statut === 'solde').length,
+      livre: commandes.filter(c => c.statut === 'livre' || c.statut === 'solde').length,
     };
   }, [commandes]);
 
@@ -56,7 +57,11 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
 
     // Status filter
     if (activeFilter !== 'toutes') {
-      list = list.filter(c => c.statut === activeFilter);
+      list = list.filter(c => {
+        if (activeFilter === 'couture' && c.statut === 'en_cours') return true;
+        if (activeFilter === 'livre' && c.statut === 'solde') return true;
+        return c.statut === activeFilter;
+      });
     }
 
     // Search query
@@ -120,15 +125,15 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
         </button>
       </div>
 
-      {/* Filter Tabs: Toutes | En cours | Prêtes | Soldées */}
+      {/* Filter Tabs: Kanban Style */}
       <div className="flex items-center gap-1.5 p-1 bg-white rounded-2xl border border-[#0D1B2A]/10 overflow-x-auto no-scrollbar shadow-2xs">
         <button
           type="button"
           onClick={() => onFilterChange('toutes')}
           className={`flex-1 min-w-[75px] py-2 px-3 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
             activeFilter === 'toutes'
-              ? 'bg-[#0D1B2A] text-white shadow-xs'
-              : 'text-[#0D1B2A]/70 hover:bg-[#F7F4EF]'
+              ? 'bg-gray-800 text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-50'
           }`}
         >
           Toutes ({filterCounts.toutes})
@@ -136,15 +141,26 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
 
         <button
           type="button"
-          onClick={() => onFilterChange('en_cours')}
+          onClick={() => onFilterChange('coupe')}
           className={`flex-1 min-w-[85px] py-2 px-3 rounded-xl text-xs font-semibold whitespace-nowrap transition flex items-center justify-center gap-1.5 ${
-            activeFilter === 'en_cours'
-              ? 'bg-[#0D1B2A] text-[#F7F4EF] shadow-xs'
-              : 'text-[#0D1B2A]/70 hover:bg-[#F7F4EF]'
+            activeFilter === 'coupe'
+              ? 'bg-gray-700 text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-50'
           }`}
         >
-          <span className="w-2 h-2 rounded-full bg-[#0D1B2A]" />
-          <span>En cours ({filterCounts.en_cours})</span>
+          ✂️ Coupe ({filterCounts.coupe})
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onFilterChange('couture')}
+          className={`flex-1 min-w-[95px] py-2 px-3 rounded-xl text-xs font-semibold whitespace-nowrap transition flex items-center justify-center gap-1.5 ${
+            (activeFilter === 'couture' || activeFilter === 'en_cours')
+              ? 'bg-orange-600 text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-50'
+          }`}
+        >
+          🧵 Couture ({filterCounts.couture})
         </button>
 
         <button
@@ -152,25 +168,23 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
           onClick={() => onFilterChange('pret')}
           className={`flex-1 min-w-[80px] py-2 px-3 rounded-xl text-xs font-semibold whitespace-nowrap transition flex items-center justify-center gap-1.5 ${
             activeFilter === 'pret'
-              ? 'bg-[#D4A017] text-[#0D1B2A] font-bold shadow-xs'
-              : 'text-[#0D1B2A]/70 hover:bg-[#F7F4EF]'
+              ? 'bg-blue-600 text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-50'
           }`}
         >
-          <span className="w-2 h-2 rounded-full bg-[#D4A017]" />
-          <span>Prêtes ({filterCounts.pret})</span>
+          👔 Prêt ({filterCounts.pret})
         </button>
 
         <button
           type="button"
-          onClick={() => onFilterChange('solde')}
+          onClick={() => onFilterChange('livre')}
           className={`flex-1 min-w-[85px] py-2 px-3 rounded-xl text-xs font-semibold whitespace-nowrap transition flex items-center justify-center gap-1.5 ${
-            activeFilter === 'solde'
-              ? 'bg-[#1F4D3A] text-white shadow-xs'
-              : 'text-[#0D1B2A]/70 hover:bg-[#F7F4EF]'
+            (activeFilter === 'livre' || activeFilter === 'solde')
+              ? 'bg-green-600 text-white shadow-xs'
+              : 'text-gray-600 hover:bg-gray-50'
           }`}
         >
-          <span className="w-2 h-2 rounded-full bg-[#1F4D3A]" />
-          <span>Soldées ({filterCounts.solde})</span>
+          ✅ Livré ({filterCounts.livre})
         </button>
       </div>
 
