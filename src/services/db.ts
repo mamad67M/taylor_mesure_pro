@@ -325,9 +325,9 @@ export const DBService = {
     const clients = this.getClients();
     const commandes = this.getCommandes();
 
-    const enCours = commandes.filter(c => c.statut === 'en_cours');
+    const enCours = commandes.filter(c => c.statut === 'coupe' || c.statut === 'couture' || c.statut === 'en_cours');
     const pretes = commandes.filter(c => c.statut === 'pret');
-    const soldees = commandes.filter(c => c.statut === 'solde');
+    const soldees = commandes.filter(c => c.statut === 'solde' || c.statut === 'livre');
     const totalRestantAEncaisser = commandes.reduce((sum, c) => sum + (c.reste_a_payer || 0), 0);
     
     const prochainesLivraisons = commandes
