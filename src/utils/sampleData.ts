@@ -118,7 +118,7 @@ export const INITIAL_COMMANDES: Commande[] = [
     avance: 20000,
     reste_a_payer: 30000,
     date_livraison: '2026-09-15',
-    statut: 'en_cours',
+    statut: 'couture',
     created_at: '2026-08-10T10:15:00Z',
     updated_at: '2026-08-10T10:15:00Z'
   },
@@ -148,7 +148,7 @@ export const INITIAL_COMMANDES: Commande[] = [
     avance: 40000,
     reste_a_payer: 0,
     date_livraison: '2026-09-30',
-    statut: 'solde',
+    statut: 'livre',
     created_at: '2026-08-14T16:20:00Z',
     updated_at: '2026-08-14T16:20:00Z'
   },
@@ -163,7 +163,7 @@ export const INITIAL_COMMANDES: Commande[] = [
     avance: 60000,
     reste_a_payer: 30000,
     date_livraison: '2026-09-08',
-    statut: 'en_cours',
+    statut: 'couture',
     created_at: '2026-08-15T15:00:00Z',
     updated_at: '2026-08-15T15:00:00Z'
   }
