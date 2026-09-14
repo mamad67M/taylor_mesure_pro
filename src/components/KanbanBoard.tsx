@@ -18,9 +18,10 @@ interface KanbanBoardProps {
 }
 
 const COLUMNS: { id: StatutCommande; title: string; color: string; bgColor: string }[] = [
-  { id: 'en_cours', title: 'En cours', color: 'text-[#D4A017]', bgColor: 'bg-[#D4A017]/10' },
-  { id: 'pret', title: 'Prêt à livrer', color: 'text-[#3A7CA6]', bgColor: 'bg-[#3A7CA6]/10' },
-  { id: 'solde', title: 'Soldées', color: 'text-[#1F4D3A]', bgColor: 'bg-[#1F4D3A]/10' },
+  { id: 'coupe', title: '✂️ Coupe', color: 'text-gray-700', bgColor: 'bg-gray-100 border border-gray-200' },
+  { id: 'couture', title: '🧵 En Couture', color: 'text-orange-700', bgColor: 'bg-orange-100 border border-orange-200' },
+  { id: 'pret', title: '👔 Prêt pour Essayage', color: 'text-blue-700', bgColor: 'bg-blue-100 border border-blue-200' },
+  { id: 'livre', title: '✅ Livré', color: 'text-green-700', bgColor: 'bg-green-100 border border-green-200' },
 ];
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({
@@ -66,7 +67,11 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex gap-4 overflow-x-auto pb-4 snap-x">
         {COLUMNS.map(col => {
-          const columnCommandes = commandes.filter(c => c.statut === col.id);
+          const columnCommandes = commandes.filter(c => {
+            if (col.id === 'couture' && c.statut === 'en_cours') return true;
+            if (col.id === 'livre' && c.statut === 'solde') return true;
+            return c.statut === col.id;
+          });
           return (
             <KanbanColumn
               key={col.id}
