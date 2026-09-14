@@ -1,4 +1,4 @@
-export type StatutCommande = 'en_cours' | 'pret' | 'solde';
+export type StatutCommande = 'coupe' | 'couture' | 'pret' | 'livre' | 'en_cours' | 'solde';
 
 export interface Client {
   id: string;
@@ -55,7 +55,7 @@ export interface CommandeComplete extends Commande {
 export type ViewType = 'dashboard' | 'clients' | 'client_detail' | 'commandes' | 'commande_detail' | 'settings';
 export type ViewTab = 'accueil' | 'commandes' | 'clients' | 'parametres' | 'dashboard' | 'settings';
 
-export type CommandeFilter = 'toutes' | 'en_cours' | 'pret' | 'solde';
+export type CommandeFilter = 'toutes' | 'coupe' | 'couture' | 'pret' | 'livre';
 export type CommandeSort = 'livraison' | 'recent' | 'statut';
 
 export interface AtelierSettings {
