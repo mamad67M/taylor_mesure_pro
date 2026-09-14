@@ -52,13 +52,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     const cmds = Array.isArray(commandes) ? commandes : [];
     const cls = Array.isArray(clients) ? clients : [];
 
-    const enCours = cmds.filter(c => c.statut === 'en_cours');
+    const enCours = cmds.filter(c => c.statut === 'coupe' || c.statut === 'couture' || c.statut === 'en_cours');
     const pretes = cmds.filter(c => c.statut === 'pret');
-    const soldees = cmds.filter(c => c.statut === 'solde');
+    const soldees = cmds.filter(c => c.statut === 'livre' || c.statut === 'solde');
     const totalRestant = cmds.reduce((sum, c) => sum + (Number(c.reste_a_payer) || 0), 0);
 
     const upcomingDeliveries = [...cmds]
-      .filter(c => c.statut !== 'solde')
+      .filter(c => c.statut !== 'solde' && c.statut !== 'livre')
       .sort((a, b) => (a.date_livraison || '').localeCompare(b.date_livraison || ''))
       .slice(0, 5);
 
@@ -179,7 +179,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Commandes En cours */}
         <button
           type="button"
-          onClick={() => handleGoToCommandes('en_cours')}
+          onClick={() => handleGoToCommandes('couture')}
           className="text-left bg-white p-4 rounded-2xl border border-[#0D1B2A]/8 shadow-xs hover:border-[#0D1B2A]/50 active:scale-98 transition group"
         >
           <div className="flex items-center justify-between mb-2">
@@ -188,7 +188,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <span className="w-2 h-2 rounded-full bg-[#0D1B2A]" />
           </div>
-          <p className="text-xs font-medium text-[#0D1B2A]/60">En cours</p>
+          <p className="text-xs font-medium text-[#0D1B2A]/60">En prod.</p>
           <p className="text-xl sm:text-2xl font-display font-bold text-[#0D1B2A] mt-0.5">
             {activeStats.commandesEnCours}
           </p>
@@ -215,7 +215,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Commandes Soldées */}
         <button
           type="button"
-          onClick={() => handleGoToCommandes('solde')}
+          onClick={() => handleGoToCommandes('livre')}
           className="text-left bg-white p-4 rounded-2xl border border-[#0D1B2A]/8 shadow-xs hover:border-[#1F4D3A] active:scale-98 transition group"
         >
           <div className="flex items-center justify-between mb-2">
@@ -224,7 +224,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <span className="w-2 h-2 rounded-full bg-[#1F4D3A]" />
           </div>
-          <p className="text-xs font-medium text-[#0D1B2A]/60">Soldées</p>
+          <p className="text-xs font-medium text-[#0D1B2A]/60">Livrées</p>
           <p className="text-xl sm:text-2xl font-display font-bold text-[#0D1B2A] mt-0.5">
             {activeStats.commandesSoldees}
           </p>
