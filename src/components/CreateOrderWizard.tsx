@@ -120,7 +120,7 @@ export const CreateOrderWizard: React.FC<CreateOrderWizardProps> = ({
     return d.toISOString().split('T')[0];
   };
   const [dateLivraison, setDateLivraison] = useState<string>(defaultDeliveryDate());
-  const [statut, setStatut] = useState<StatutCommande>('en_cours');
+  const [statut, setStatut] = useState<StatutCommande>('coupe');
 
   // Success screen state
   const [isSuccess, setIsSuccess] = useState(false);
