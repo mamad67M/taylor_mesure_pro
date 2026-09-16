@@ -37,7 +37,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5,
+        delay: 150, // Permet de distinguer un "scroll" d'un "drag" sur mobile
+        tolerance: 5,
       },
     })
   );
@@ -141,6 +142,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
             settings={settings}
             onSelectCommande={() => onSelectCommande(cmd.id)}
             onSelectClient={() => onSelectClient(cmd.client_id)}
+            onUpdateStatus={onUpdateStatus}
           />
         ))}
       </div>
@@ -149,6 +151,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
 };
 
 interface KanbanCardProps {
+  onUpdateStatus?: (id: string, newStatus: StatutCommande) => void;
   commande: Commande;
   client?: Client;
   settings: AtelierSettings;
@@ -157,7 +160,7 @@ interface KanbanCardProps {
   isOverlay?: boolean;
 }
 
-const KanbanCard: React.FC<KanbanCardProps> = ({ commande, client, settings, onSelectCommande, onSelectClient, isOverlay }) => {
+const KanbanCard: React.FC<KanbanCardProps> = ({ commande, client, settings, onSelectCommande, onSelectClient, isOverlay, onUpdateStatus }) => {
   const relativeDate = getDeliveryRelativeText(commande.date_livraison);
   
   return (
@@ -200,14 +203,36 @@ const KanbanCard: React.FC<KanbanCardProps> = ({ commande, client, settings, onS
         </div>
       </div>
 
-      <div className="flex items-end justify-between pt-2 border-t border-gray-100">
+      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
         <div>
           <span className="text-[9px] uppercase tracking-wider text-[#0D1B2A]/50 block">Reste à payer</span>
           <span className={`text-sm font-display font-bold ${commande.reste_a_payer > 0 ? 'text-[#0D1B2A]' : 'text-[#1F4D3A]'}`}>
             {formatCurrency(commande.reste_a_payer, settings.devise)}
           </span>
         </div>
-        <StatusBadge statut={commande.statut} size="sm" />
+        {onUpdateStatus ? (
+          <div 
+            className="relative"
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <select
+              value={commande.statut}
+              onChange={(e) => onUpdateStatus(commande.id, e.target.value as StatutCommande)}
+              className="appearance-none bg-[#0D1B2A]/5 text-[#0D1B2A] text-xs font-semibold px-2.5 py-1.5 pr-6 rounded-lg border-none focus:ring-2 focus:ring-[#D4A017]/50 cursor-pointer"
+            >
+              <option value="coupe">✂️ Coupe</option>
+              <option value="couture">🧵 En Couture</option>
+              <option value="pret">👔 Prêt (Essayage)</option>
+              <option value="livre">✅ Livré</option>
+            </select>
+            <div className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#0D1B2A]/50">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        ) : (
+          <StatusBadge statut={commande.statut} size="sm" />
+        )}
       </div>
     </div>
   );
