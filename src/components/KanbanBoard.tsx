@@ -85,6 +85,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
               settings={settings}
               onSelectCommande={onSelectCommande}
               onSelectClient={onSelectClient}
+              onUpdateStatus={onUpdateStatus}
             />
           );
         })}
@@ -105,6 +106,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 };
 
 interface KanbanColumnProps {
+  onUpdateStatus: (id: string, newStatus: StatutCommande) => void;
+  onUpdateStatus: (id: string, newStatus: StatutCommande) => void;
   id: StatutCommande;
   title: string;
   color: string;
@@ -117,7 +120,7 @@ interface KanbanColumnProps {
 }
 
 const KanbanColumn: React.FC<KanbanColumnProps> = ({
-  id, title, color, bgColor, commandes, clientMap, settings, onSelectCommande, onSelectClient
+  id, title, color, bgColor, commandes, clientMap, settings, onSelectCommande, onSelectClient, onUpdateStatus
 }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
 
@@ -143,7 +146,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
             onSelectCommande={() => onSelectCommande(cmd.id)}
             onSelectClient={() => onSelectClient(cmd.client_id)}
             onUpdateStatus={onUpdateStatus}
-          />
+            />
         ))}
       </div>
     </div>
